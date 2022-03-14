@@ -1,43 +1,45 @@
-import re
-from typing import Dict, List
+import pytest
+from unittest.mock import patch, mock_open
+
+from word_counter import get_text_from_file, get_word_counts
 
 
-def get_words(input: str) -> List[str]:
-    """
-    Get the words from an input string.
-    """
-    words = re.split(r"\s", input)
-    return words
+test_data = [
+    {
+        "input_str": "I love you.",
+        "expected": {
+            "I": 1,
+            "love": 1,
+            "you.": 1,
+        },
+    },
+    {
+        "input_str": "I love you.\nDo you love me?",
+        "expected": {
+            "Do": 1,
+            "I": 1,
+            "love": 2,
+            "me?": 1,
+            "you": 1,
+            "you.": 1,
+        },
+    },
+]
 
 
-def get_word_counts(input: str) -> Dict[str, int]:
-    words = get_words(input)
-    tally: Dict[str, int] = {}
-    for word in words:
-        if word in tally:
-            tally[word] = tally[word] + 1
-        else:
-            tally[word] = 1
-
-    return tally
-
-
-def test_get_word_counts():
-    actual = get_word_counts("I love you.")
-    expected = {
-        "I": 1,
-        "love": 1,
-        "you.": 1,
-    }
+@pytest.mark.parametrize(
+    ["input_str", "expected"],
+    [(x["input_str"], x["expected"]) for x in test_data],
+)
+def test_get_word_counts(input_str, expected):
+    actual = get_word_counts(input_str)
     assert actual == expected
 
-    actual = get_word_counts("I love you.\nDo you love me?")
-    expected = {
-        "Do": 1,
-        "I": 1,
-        "love": 2,
-        "me?": 1,
-        "you": 1,
-        "you.": 1,
-    }
-    assert actual == expected
+
+def test_get_text_from_file():
+    with patch("builtins.open", mock_open(read_data="xyz\nabc")) as mock_file:
+        filepath = "boink"
+        actual = get_text_from_file(filepath)
+        expected = "xyz\nabc"
+        mock_file.assert_called_with(filepath)
+        assert actual == expected
