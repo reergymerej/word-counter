@@ -1,6 +1,8 @@
 import re
 from typing import Dict, List
 
+from custom_types import Tally
+
 
 def get_text_from_file(filepath: str) -> str:
     with open(filepath) as f:
@@ -15,7 +17,7 @@ def get_words(input: str) -> List[str]:
     return words
 
 
-def get_word_counts(input: str) -> Dict[str, int]:
+def get_word_counts(input: str) -> Tally:
     words = get_words(input)
     tally: Dict[str, int] = {}
     for word in words:
@@ -25,3 +27,8 @@ def get_word_counts(input: str) -> Dict[str, int]:
             tally[word] = 1
 
     return tally
+
+
+def get_tally_from_file(filepath) -> Tally:
+    text = get_text_from_file(filepath)
+    return get_word_counts(text)

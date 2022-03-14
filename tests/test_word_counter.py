@@ -1,7 +1,11 @@
 import pytest
 from unittest.mock import patch, mock_open
 
-from word_counter import get_text_from_file, get_word_counts
+from word_counter import (
+    get_tally_from_file,
+    get_text_from_file,
+    get_word_counts,
+)
 
 
 test_data = [
@@ -43,3 +47,17 @@ def test_get_text_from_file():
         expected = "xyz\nabc"
         mock_file.assert_called_with(filepath)
         assert actual == expected
+
+
+def test_get_tally_from_file():
+    with patch("word_counter.get_text_from_file") as mock:
+        mock.return_value = "foo bar baz bar"
+        filepath = "something.txt"
+        actual = get_tally_from_file(filepath)
+        expected = {
+            "bar": 2,
+            "baz": 1,
+            "foo": 1,
+        }
+        assert actual == expected
+        mock.assert_called_with(filepath)
