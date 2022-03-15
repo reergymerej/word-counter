@@ -1,3 +1,4 @@
+from os.path import exists
 import re
 from typing import Dict, List
 
@@ -41,3 +42,16 @@ def get_cache_file(filepath: str) -> str:
     new_last = f".tally_{last}"
     front.append(new_last)
     return divider.join(front)
+
+
+def get_from_cache(filepath: str) -> Tally:
+    raise NotImplementedError()
+
+
+def get_cached_tally_from_file(filepath: str) -> Tally:
+    cache_file = get_cache_file(filepath)
+    print(exists)
+    if exists(cache_file):
+        return get_from_cache(cache_file)
+    else:
+        raise NotImplementedError()

@@ -1,8 +1,10 @@
 import pytest
 from unittest.mock import MagicMock, patch, mock_open
+from custom_types import Tally
 
 from word_counter import (
     get_cache_file,
+    get_cached_tally_from_file,
     get_tally_from_file,
     get_text_from_file,
     get_word_counts,
@@ -87,9 +89,29 @@ def test_get_cache_file(filepath, expected):
 
 
 def test_get_cached_tally_from_file():
-    # it should not call open(source)
-    filepath = "i_am/like_a.bird"
-    cache_file = get_cache_file(filepath)
-    mock: MagicMock = MagicMock()
-    mock("xxx")
-    mock.assert_called_once_with(cache_file)
+
+    # mock that the file exists
+    with patch("word_counter.exists") as mock_exists:
+        mock_exists.return_value = True
+
+        filepath = "i_am/like_a.bird"
+        cache_file = get_cache_file(filepath)
+
+        # mock the result pulled from the cache
+        with patch("word_counter.get_from_cache") as mock_get_from_cache:
+            mock_get_from_cache.return_value = {
+                "foo": 1,
+                "bingo": 99,
+            }
+
+            actual = get_cached_tally_from_file(filepath)
+
+            # it should not call open(filepath)
+            # it should call open(cache_file)
+            mock_get_from_cache.assert_called_once_with(cache_file)
+
+            expected: Tally = {
+                "foo": 1,
+                "bingo": 99,
+            }
+            assert actual == expected
