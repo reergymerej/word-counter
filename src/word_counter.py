@@ -32,3 +32,12 @@ def get_word_counts(input: str) -> Tally:
 def get_tally_from_file(filepath) -> Tally:
     text = get_text_from_file(filepath)
     return get_word_counts(text)
+
+
+def get_cache_file(filepath: str) -> str:
+    divider = "/"
+    parts = filepath.split(divider)
+    *front, last = parts
+    new_last = f".tally_{last}"
+    front.append(new_last)
+    return divider.join(front)

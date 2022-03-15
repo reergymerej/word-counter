@@ -1,7 +1,8 @@
 import pytest
-from unittest.mock import patch, mock_open
+from unittest.mock import MagicMock, patch, mock_open
 
 from word_counter import (
+    get_cache_file,
     get_tally_from_file,
     get_text_from_file,
     get_word_counts,
@@ -61,3 +62,34 @@ def test_get_tally_from_file():
         }
         assert actual == expected
         mock.assert_called_with(filepath)
+
+
+@pytest.mark.parametrize(
+    ["filepath", "expected"],
+    [
+        (
+            "all/in.me",
+            "all/.tally_in.me",
+        ),
+        (
+            "./foo.txt",
+            "./.tally_foo.txt",
+        ),
+        (
+            "bar.txt",
+            ".tally_bar.txt",
+        ),
+    ],
+)
+def test_get_cache_file(filepath, expected):
+    actual = get_cache_file(filepath)
+    assert actual == expected
+
+
+def test_get_cached_tally_from_file():
+    # it should not call open(source)
+    filepath = "i_am/like_a.bird"
+    cache_file = get_cache_file(filepath)
+    mock: MagicMock = MagicMock()
+    mock("xxx")
+    mock.assert_called_once_with(cache_file)
