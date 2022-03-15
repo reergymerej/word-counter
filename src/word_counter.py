@@ -30,12 +30,12 @@ def get_word_counts(input: str) -> Tally:
     return tally
 
 
-def get_tally_from_file(filepath) -> Tally:
+def get_tally_from_file_no_cache(filepath) -> Tally:
     text = get_text_from_file(filepath)
     return get_word_counts(text)
 
 
-def get_cache_file(filepath: str) -> str:
+def get_cache_filepath(filepath: str) -> str:
     divider = "/"
     parts = filepath.split(divider)
     *front, last = parts
@@ -48,10 +48,20 @@ def get_from_cache(filepath: str) -> Tally:
     raise NotImplementedError()
 
 
-def get_cached_tally_from_file(filepath: str) -> Tally:
-    cache_file = get_cache_file(filepath)
-    print(exists)
-    if exists(cache_file):
+def should_use_cache(filepath: str) -> bool:
+    pass
+
+
+def can_get_from_cache(cache_file: str) -> bool:
+    return exists(cache_file)
+
+
+def get_tally_from_file(filepath: str) -> Tally:
+    """Get tally of words from file, defers to cache."""
+    cache_file = get_cache_filepath(filepath)
+    has_cache = can_get_from_cache(cache_file)
+    use_cache = has_cache and should_use_cache(filepath)
+    if use_cache:
         return get_from_cache(cache_file)
     else:
-        raise NotImplementedError()
+        return get_tally_from_file_no_cache(filepath)

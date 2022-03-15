@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "word-counter"
 version = "0.1.0"
-description = ""
+description = "counts words in files"
 authors = ["Jeremy Greer <jex.grizzle@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 pytest = "^7.1.0"
+pytest-cov = "^3.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"

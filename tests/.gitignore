@@ -3,3 +3,4 @@ workspace.*
 .pytest_cache/
 .vscode/
 **/__pycache__/
+cov.xml
