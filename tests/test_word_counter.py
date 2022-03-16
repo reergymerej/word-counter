@@ -154,20 +154,25 @@ def test_when_there_is_no_cache():
 
 class TestWhenThereIsCache(TestCase):
     def test_if_it_should_use_the_cache(self):
-        with patch("word_counter.can_get_from_cache") as mock_can_get_from_cache:
+        with patch("word_counter.can_get_from_cache") \
+                as mock_can_get_from_cache:
             mock_can_get_from_cache.return_value = True
-            with patch("word_counter.should_use_cache") as mock_should_use_cache:
-                with patch("word_counter.get_from_cache") as _mock_get_from_cache:
+            with patch("word_counter.should_use_cache") \
+                    as mock_should_use_cache:
+                with patch("word_counter.get_from_cache") as _:
                     filepath = "richie.hawtin"
                     get_tally_from_file(filepath)
                     mock_should_use_cache.assert_called_once_with(filepath)
 
     def test_when_it_should_use_the_cache(self):
-        with patch("word_counter.can_get_from_cache") as mock_can_get_from_cache:
+        with patch("word_counter.can_get_from_cache") \
+                as mock_can_get_from_cache:
             mock_can_get_from_cache.return_value = True
-            with patch("word_counter.should_use_cache") as mock_should_use_cache:
+            with patch("word_counter.should_use_cache") \
+                    as mock_should_use_cache:
                 mock_should_use_cache.return_value = True
-                with patch("word_counter.get_from_cache") as mock_get_from_cache:
+                with patch("word_counter.get_from_cache") \
+                        as mock_get_from_cache:
                     cached_value: Tally = {"foo": 99}
                     mock_get_from_cache.return_value = cached_value
                     filepath = "umek"
@@ -175,9 +180,11 @@ class TestWhenThereIsCache(TestCase):
                     assert actual == cached_value
 
     def test_when_it_should_not_use_the_cache(self):
-        with patch("word_counter.can_get_from_cache") as mock_can_get_from_cache:
+        with patch("word_counter.can_get_from_cache") \
+                as mock_can_get_from_cache:
             mock_can_get_from_cache.return_value = True
-            with patch("word_counter.should_use_cache") as mock_should_use_cache:
+            with patch("word_counter.should_use_cache") \
+                    as mock_should_use_cache:
                 mock_should_use_cache.return_value = False
                 with patch(
                     "word_counter.get_tally_from_file_no_cache"
